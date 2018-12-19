@@ -1,28 +1,29 @@
-﻿using System;
+﻿using SwissTransport;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SwissTransport;
 
-namespace Fahrplan
+namespace FAHRPLAN_APPLIKATION
 {
-    public partial class Fahrplan : Form
+    public partial class Form1 : Form
     {
         Transport transport = new Transport();
         Coordinate coordinate = new Coordinate();
-        BindingList<Connection> VerbindungsListe = new BindingList<Connection>();
-        BindingList<StationBoard> stationBoardList = new BindingList<StationBoard>();
-        public Fahrplan()
+        public Form1()
         {
             InitializeComponent();
-            dgvResultat.DataSource = VerbindungsListe;
         }
-        private void getstations(string text, ListBox listBox)
+
+        //Methoden
+        private void Get_Stations(string text, ListBox listBox)
         {
             if (text.Length >= 3)
             {
@@ -34,18 +35,9 @@ namespace Fahrplan
                     listBox.Visible = true;
                     listBox.BringToFront();
                 }
-                
             }
         }
 
-        private void btnWechseln_Click(object sender, EventArgs e)
-        {
-            string abfahrtsort = txtAbfahrtsort.Text;
-            string ziel = txtZiel.Text;
-
-            txtAbfahrtsort.Text = ziel;
-            txtZiel.Text = abfahrtsort;   
-        }
         public string Get_TableFromDataGrid()
         {
             StringBuilder strTable = new StringBuilder();
@@ -53,15 +45,15 @@ namespace Fahrplan
             {
                 strTable.Append("<table border='1' cellpadding='0' cellspacing='0'>");
                 strTable.Append("<tr>");
-                foreach (DataGridViewColumn col in dgvResultat.Columns)
+                foreach (DataGridViewColumn col in DTG_verbindungen.Columns)
                 {
                     strTable.AppendFormat("<th>{0}</th>", col.HeaderText);
                 }
                 strTable.Append("</tr>");
-                for (int i = 0; i < dgvResultat.Rows.Count; i++)
+                for (int i = 0; i < DTG_verbindungen.Rows.Count; i++)
                 {
                     strTable.Append("<tr>");
-                    foreach (DataGridViewCell cell in dgvResultat.Rows[i].Cells)
+                    foreach (DataGridViewCell cell in DTG_verbindungen.Rows[i].Cells)
                     {
                         if (cell.Value != null)
                         {
@@ -82,7 +74,7 @@ namespace Fahrplan
         private void Get_Grid()
         {
             Cursor.Current = Cursors.WaitCursor;
-            lblladen.Visible = true;
+            LBL_laden.Visible = true;
             DataTable dtt_connections = new DataTable();
             dtt_connections.Columns.Add("Datum");
             dtt_connections.Columns.Add("Von");
@@ -92,7 +84,7 @@ namespace Fahrplan
             dtt_connections.Columns.Add("Gleis");
 
             //Abfrage
-            Connections connections = transport.GetConnections(txtAbfahrtsort.Text, txtZiel.Text, dtpDatum.Value.ToString("yyyy-MM-dd"), dtpUhrzeit.Text);
+            Connections connections = transport.GetConnections(TXT_von.Text, TXT_nach.Text, DTP_datum.Value.ToString("yyyy-MM-dd"), DTP_zeit.Text);
 
             //Jedes Resulatat zur Liste hinzufügen
             foreach (Connection connection in connections.ConnectionList)
@@ -100,8 +92,8 @@ namespace Fahrplan
                 dtt_connections.Rows.Add(Get_Date(connection.From.Departure), connection.From.Station.Name, Get_Time(connection.From.Departure), connection.To.Station.Name, Get_Time(connection.To.Arrival), connection.To.Platform);
             }
 
-            dgvResultat.DataSource = dtt_connections;
-            lblladen.Visible = false;
+            DTG_verbindungen.DataSource = dtt_connections;
+            LBL_laden.Visible = false;
             UseWaitCursor = false;
         }
 
@@ -113,7 +105,7 @@ namespace Fahrplan
             dtt_routes.Columns.Add("Linie");
 
             //Definieren der Station für die Abfahrtstafel (Inhalt der Textbox wird übergeben)
-            Station station = transport.GetStations(.Text).StationList.First();
+            Station station = transport.GetStations(BTN_von_2.Text).StationList.First();
             StationBoardRoot departures = transport.GetStationBoard(station.Name, station.Id); //Beispiel für station.name ist Luzern, Beispiel für station.Id = 8505000
 
             foreach (StationBoard station_b in departures.Entries)
@@ -279,7 +271,7 @@ namespace Fahrplan
 
         private void btn_exit_Click_1(object sender, EventArgs e)
         {
-            Form2 exit = new Form2();
+            /*Form2 exit = new Form2();
             exit.Visible = false;
             if (exit.ShowDialog(this) == DialogResult.OK)
             {
@@ -288,7 +280,7 @@ namespace Fahrplan
             else
             {
                 exit.Dispose();
-            }
+            }*/
         }
 
         private void PB_switch_Click(object sender, EventArgs e)
@@ -327,6 +319,5 @@ namespace Fahrplan
                 }
             }
         }
-
     }
 }

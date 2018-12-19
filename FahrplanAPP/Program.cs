@@ -1,11 +1,11 @@
-﻿using System;
+﻿using FAHRPLAN_APPLIKATION;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SwissTransport;
 
-namespace Fahrplan
+namespace FahrplanAPP
 {
     static class Program
     {
@@ -17,7 +17,7 @@ namespace Fahrplan
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Fahrplan());
+            Application.Run(new Form1());
         }
     }
 }

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4153F1ED-94EE-4E32-A074-45391E961C0D}</ProjectGuid>
+    <ProjectGuid>{8D800264-64A6-4D68-BF45-6C8E4D3D6B74}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Fahrplan</RootNamespace>
-    <AssemblyName>Fahrplan</AssemblyName>
+    <RootNamespace>FahrplanAPP</RootNamespace>
+    <AssemblyName>FahrplanAPP</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -69,7 +66,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -84,9 +80,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fahrplan\Fahrplan.csproj">
+      <Project>{4153f1ed-94ee-4e32-a074-45391e961c0d}</Project>
+      <Name>Fahrplan</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\SwissTransport\SwissTransport.csproj">
       <Project>{d0262178-a48f-4de0-807b-e76b63e39421}</Project>
       <Name>SwissTransport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tests\SwissTransportTest\SwissTransportTest.csproj">
+      <Project>{959c6e54-5b1c-40f5-938a-c57b17451421}</Project>
+      <Name>SwissTransportTest</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
