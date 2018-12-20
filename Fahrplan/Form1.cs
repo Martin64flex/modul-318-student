@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SwissTransport;
+using System.Net.Mail;
 
 namespace Fahrplan
 {
@@ -15,12 +16,11 @@ namespace Fahrplan
     {
         Transport transport = new Transport();
         Coordinate coordinate = new Coordinate();
-        BindingList<Connection> VerbindungsListe = new BindingList<Connection>();
-        BindingList<StationBoard> stationBoardList = new BindingList<StationBoard>();
+        
         public Fahrplan()
         {
             InitializeComponent();
-            dgvResultat.DataSource = VerbindungsListe;
+            
         }
         private void getstations(string text, ListBox listBox)
         {
@@ -36,15 +36,6 @@ namespace Fahrplan
                 }
                 
             }
-        }
-
-        private void btnWechseln_Click(object sender, EventArgs e)
-        {
-            string abfahrtsort = txtAbfahrtsort.Text;
-            string ziel = txtZiel.Text;
-
-            txtAbfahrtsort.Text = ziel;
-            txtZiel.Text = abfahrtsort;   
         }
         public string Get_TableFromDataGrid()
         {
@@ -78,11 +69,10 @@ namespace Fahrplan
             }
             return strTable.ToString();
         }
-
         private void Get_Grid()
         {
             Cursor.Current = Cursors.WaitCursor;
-            lblladen.Visible = true;
+            lblLaden.Visible = true;
             DataTable dtt_connections = new DataTable();
             dtt_connections.Columns.Add("Datum");
             dtt_connections.Columns.Add("Von");
@@ -90,21 +80,18 @@ namespace Fahrplan
             dtt_connections.Columns.Add("Nach");
             dtt_connections.Columns.Add("Ankunft");
             dtt_connections.Columns.Add("Gleis");
-
-            //Abfrage
+            
             Connections connections = transport.GetConnections(txtAbfahrtsort.Text, txtZiel.Text, dtpDatum.Value.ToString("yyyy-MM-dd"), dtpUhrzeit.Text);
 
-            //Jedes Resulatat zur Liste hinzufügen
             foreach (Connection connection in connections.ConnectionList)
             {
                 dtt_connections.Rows.Add(Get_Date(connection.From.Departure), connection.From.Station.Name, Get_Time(connection.From.Departure), connection.To.Station.Name, Get_Time(connection.To.Arrival), connection.To.Platform);
             }
 
             dgvResultat.DataSource = dtt_connections;
-            lblladen.Visible = false;
+            lblLaden.Visible = false;
             UseWaitCursor = false;
         }
-
         private void Get_2_Grid()
         {
             DataTable dtt_routes = new DataTable();
@@ -112,162 +99,42 @@ namespace Fahrplan
             dtt_routes.Columns.Add("Nach");
             dtt_routes.Columns.Add("Linie");
 
-            //Definieren der Station für die Abfahrtstafel (Inhalt der Textbox wird übergeben)
-            Station station = transport.GetStations(.Text).StationList.First();
-            StationBoardRoot departures = transport.GetStationBoard(station.Name, station.Id); //Beispiel für station.name ist Luzern, Beispiel für station.Id = 8505000
+            Station station = transport.GetStations(txtVon.Text).StationList.First();
+            StationBoardRoot departures = transport.GetStationBoard(station.Name, station.Id); 
 
             foreach (StationBoard station_b in departures.Entries)
             {
-                dtt_routes.Rows.Add(Get_Time(station_b.Stop.Departure.ToString()), station_b.To, (station_b.Category + " " + station_b.Number)); //Jede Linie die gefunden wird, wird hier durchgegangen
+                dtt_routes.Rows.Add(Get_Time(station_b.Stop.Departure.ToString()), station_b.To, (station_b.Category + " " + station_b.Number)); 
             }
 
-            DTG_Verbindungen_2.DataSource = dtt_routes;
+            dgvAbfahrtsplan.DataSource = dtt_routes;
         }
 
         private string Get_Date(string date1)
         {
             string date2 = date1.Remove(10);
             DateTime date3 = Convert.ToDateTime(date2);
-            return date3.ToString("dd.MM.yyyy");
+            return date3.ToString("dd.mm.yyyy");
         }
-
-        private string Get_Time(string time1) //Zeit kommt so 13:25:00 und die letzen 2 Stellen :00 werden hier gelöscht.
+        private string Get_Time(string time1) 
         {
             string time2 = time1.Remove(0, 11);
             time2 = time2.Remove(5);
             return time2;
         }
 
-        private void Create_GmapStation(string x, string y)
+        private void btnWechseln_Click(object sender, EventArgs e)
         {
-            string url = "https://www.google.ch/maps/place/" + x + "," + y;
-            WEB_google_maps.Navigate(url);
+            string abfahrtsort = txtAbfahrtsort.Text;
+            string ziel = txtZiel.Text;
+
+            txtAbfahrtsort.Text = ziel;
+            txtZiel.Text = abfahrtsort;   
         }
 
-        private void Switch_txt(TextBox textBox1, TextBox textBox2)
+        private void btnSuchen_Click(object sender, EventArgs e)
         {
-            string temp = textBox1.Text;
-            textBox1.Text = textBox2.Text;
-            textBox2.Text = temp;
-        }
-
-        //Navigation 
-        private void Form_Fahrplan_Load(object sender, EventArgs e)
-        {
-            PNL_1.Visible = true;
-            PNL_2.Visible = false;
-            PNL_3.Visible = false;
-            LBL_laden.Visible = false;
-        }
-
-        private void BTN_nav1_Click(object sender, EventArgs e)
-        {
-            PNL_1.Visible = true;
-            PNL_2.Visible = false;
-            PNL_3.Visible = false;
-        }
-
-        private void BTN_nav2_Click(object sender, EventArgs e)
-        {
-            PNL_1.Visible = false;
-            PNL_2.Visible = true;
-            PNL_3.Visible = false;
-        }
-
-        private void BTN_nav3_Click(object sender, EventArgs e)
-        {
-            PNL_1.Visible = false;
-            PNL_2.Visible = false;
-            PNL_3.Visible = true;
-        }
-
-        //Menu1
-        private void BTN_google_maps_Click(object sender, EventArgs e)
-        {
-            PNL_1.Visible = false;
-            PNL_2.Visible = false;
-            PNL_3.Visible = true;
-        }
-
-        private void TXT_von_TextChanged(object sender, EventArgs e)
-        {
-            Get_Stations(TXT_von.Text, LBX_von);
-        }
-
-        private void TXT_nach_TextChanged(object sender, EventArgs e)
-        {
-            Get_Stations(TXT_nach.Text, LBX_nach);
-        }
-
-        private void LBX_von_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            TXT_von.Text = LBX_von.SelectedItem.ToString();
-            BTN_suche.Focus();
-            LBX_von.Visible = false;
-        }
-
-        private void LBX_nach_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            TXT_nach.Text = LBX_nach.SelectedItem.ToString();
-            BTN_suche.Focus();
-            LBX_nach.Visible = false;
-        }
-
-        //Menu2
-        private void BTN_suche_2_Click(object sender, EventArgs e)
-        {
-            if (BTN_von_2.Text != string.Empty)
-            {
-                Get_2_Grid();
-            }
-            else
-            {
-                MessageBox.Show("Bitte geben Sie einen Ort ein!");
-            }
-        }
-
-        private void BTN_von_2_TextChanged(object sender, EventArgs e)
-        {
-            Get_Stations(BTN_von_2.Text, LBX_von_2);
-        }
-
-        private void LBX_von_2_DoubleClick(object sender, EventArgs e)
-        {
-            BTN_von_2.Text = LBX_von_2.SelectedItem.ToString();
-            BTN_suche_2.Focus();
-            LBX_von_2.Visible = false;
-        }
-
-        //Menu3
-        private void BTN_suche_3_Click(object sender, EventArgs e)
-        {
-            if (TXT_station.Text != string.Empty)
-            {
-                Stations stations = transport.GetStations(TXT_station.Text);
-                Station station = stations.StationList[0];
-                Create_GmapStation(Convert.ToString(station.Coordinate.XCoordinate).Replace(',', '.'), Convert.ToString(station.Coordinate.YCoordinate).Replace(',', '.'));
-            }
-            else
-            {
-                MessageBox.Show("Bitte geben Sie einen Ort ein!");
-            }
-        }
-
-        private void TXT_station_TextChanged(object sender, EventArgs e)
-        {
-            Get_Stations(TXT_station.Text, LBX_station);
-        }
-
-        private void lbx_3_start_DoubleClick(object sender, EventArgs e)
-        {
-            TXT_station.Text = LBX_station.SelectedItem.ToString();
-            BTN_suche_3.Focus();
-            LBX_station.Visible = false;
-        }
-
-        private void BTN_suche_Click_1(object sender, EventArgs e)
-        {
-            if (TXT_von.Text != string.Empty)
+            if (txtAbfahrtsort.Text != string.Empty)
             {
                 Get_Grid();
             }
@@ -276,8 +143,74 @@ namespace Fahrplan
                 MessageBox.Show("Bitte geben Sie zwei Orte ein!");
             }
         }
+    
 
-        private void btn_exit_Click_1(object sender, EventArgs e)
+
+        private void lsbAbfahrtsort_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            txtAbfahrtsort.Text = lsbAbfahrtsort.SelectedItem.ToString();
+            btnSuchen.Focus();
+            lsbAbfahrtsort.Visible = false;
+        }
+
+        private void lsbZiel_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            txtZiel.Text = lsbZiel.SelectedItem.ToString();
+            btnSuchen.Focus();
+            lsbZiel.Visible = false;
+
+        }
+
+        private void txtAbfahrtsort_TextChanged_1(object sender, EventArgs e)
+        {
+            getstations(txtAbfahrtsort.Text, lsbAbfahrtsort);
+        }
+
+        private void txtZiel_TextChanged_1(object sender, EventArgs e)
+        {
+            getstations(txtZiel.Text, lsbZiel);
+        }
+
+        private void btnVerbindung_Click(object sender, EventArgs e)
+        {
+            pnlfahrplan.Visible = true;
+            pnlAbfahrtsplan.Visible = false;         
+        }
+
+        private void btnabfahrtstafel_Click(object sender, EventArgs e)
+        {
+            pnlAbfahrtsplan.Visible = true;            
+        }
+
+        private void txtVon_TextChanged(object sender, EventArgs e)
+        {
+            getstations(txtVon.Text, lsbVon);
+        }
+
+       
+
+        private void btnAbfahrt_Click(object sender, EventArgs e)
+        {
+            lblLädt2.Visible = true;
+            if (txtVon.Text != string.Empty)
+            {
+                Get_2_Grid();
+            }
+            else
+            {
+                MessageBox.Show("Bitte geben Sie einen Ort ein!");
+            }
+            lblLädt2.Visible = false;
+        }
+
+        private void lsbVon_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtVon.Text = lsbVon.SelectedItem.ToString();
+            txtVon.Focus();
+            lsbVon.Visible = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
             Form2 exit = new Form2();
             exit.Visible = false;
@@ -291,24 +224,31 @@ namespace Fahrplan
             }
         }
 
-        private void PB_switch_Click(object sender, EventArgs e)
+        private void btnKarte_Click(object sender, EventArgs e)
         {
-            Switch_txt(TXT_von, TXT_nach);
-            LBX_von.Visible = false;
-            LBX_nach.Visible = false;
+            Form neuesFormular = new Maps();
+            neuesFormular.Show(this);
         }
 
-        private void BTN_email_Click(object sender, EventArgs e)
+
+        private void txtMail_Click(object sender, EventArgs e)
         {
-            if (TXT_email.Text == "")
+            string mail = " ";
+            this.txtMail.Text = mail;
+            this.txtMail.ForeColor = Color.Black;
+        }
+
+        private void btnMail_Click(object sender, EventArgs e)
+        {
+            if (txtMail.Text == "")
                 MessageBox.Show("Bitte geben Sie eine Email-Adresse ein!");
             else
             {
                 try
                 {
                     MailMessage mail = new MailMessage();
-                    mail.From = new MailAddress("modul318.andreas@gmail.com");
-                    mail.To.Add(new MailAddress(Convert.ToString(this.TXT_email)));
+                    mail.From = new MailAddress("Martin64flex@gmail.com");
+                    mail.To.Add(new MailAddress(Convert.ToString(this.txtMail)));
                     mail.Subject = "Fahrplan";
                     mail.Body = "Hallo, hier ein Fahrplan, den ich mit dir teilen wollte. ";
                     mail.Body += "<b>" + Get_TableFromDataGrid() + "</b>";
@@ -316,7 +256,7 @@ namespace Fahrplan
                     SmtpClient SmtpServer = new SmtpClient();
                     SmtpServer.Host = "smtp.gmail.com";
                     SmtpServer.Port = 587;
-                    SmtpServer.Credentials = new System.Net.NetworkCredential("modul318.andreas@gmail.com", "Kennwort$21");
+                    SmtpServer.Credentials = new System.Net.NetworkCredential("Martin64flex@gmail.com", "Martin17*");
                     SmtpServer.EnableSsl = true;
                     SmtpServer.Send(mail);
                     MessageBox.Show("Email wurde erfolgreich gesendet");
@@ -328,5 +268,6 @@ namespace Fahrplan
             }
         }
 
+      
     }
 }
