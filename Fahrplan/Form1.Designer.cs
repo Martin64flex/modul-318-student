@@ -464,6 +464,7 @@
             this.Controls.Add(this.pnlfahrplan);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(866, 585);
             this.Name = "Fahrplan";
             this.Text = "Fahrplan";
             this.grbSuche.ResumeLayout(false);

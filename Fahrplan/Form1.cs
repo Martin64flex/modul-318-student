@@ -81,8 +81,10 @@ namespace Fahrplan
             dtt_connections.Columns.Add("Ankunft");
             dtt_connections.Columns.Add("Gleis");
             
+            //Abfrarge
             Connections connections = transport.GetConnections(txtAbfahrtsort.Text, txtZiel.Text, dtpDatum.Value.ToString("yyyy-MM-dd"), dtpUhrzeit.Text);
 
+            //Resultat wird zur Lsite hinzugefügt
             foreach (Connection connection in connections.ConnectionList)
             {
                 dtt_connections.Rows.Add(Get_Date(connection.From.Departure), connection.From.Station.Name, Get_Time(connection.From.Departure), connection.To.Station.Name, Get_Time(connection.To.Arrival), connection.To.Platform);
@@ -99,6 +101,7 @@ namespace Fahrplan
             dtt_routes.Columns.Add("Nach");
             dtt_routes.Columns.Add("Linie");
 
+            //Inhalt der Textbox wird übergeben
             Station station = transport.GetStations(txtVon.Text).StationList.First();
             StationBoardRoot departures = transport.GetStationBoard(station.Name, station.Id); 
 
@@ -170,7 +173,8 @@ namespace Fahrplan
         {
             getstations(txtZiel.Text, lsbZiel);
         }
-
+        
+        //Navigation
         private void btnVerbindung_Click(object sender, EventArgs e)
         {
             pnlfahrplan.Visible = true;
@@ -238,9 +242,10 @@ namespace Fahrplan
             this.txtMail.ForeColor = Color.Black;
         }
 
+        //Email Verschiken
         private void btnMail_Click(object sender, EventArgs e)
         {
-            if (txtMail.Text == "")
+            if (txtMail.Text == "max@gmail.ch")
                 MessageBox.Show("Bitte geben Sie eine Email-Adresse ein!");
             else
             {
