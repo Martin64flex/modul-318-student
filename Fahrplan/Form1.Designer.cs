@@ -310,9 +310,9 @@
             // 
             // pnlfahrplan
             // 
+            this.pnlfahrplan.Controls.Add(this.pnlAbfahrtsplan);
             this.pnlfahrplan.Controls.Add(this.grbResultat);
             this.pnlfahrplan.Controls.Add(this.grbSuche);
-            this.pnlfahrplan.Controls.Add(this.pnlAbfahrtsplan);
             this.pnlfahrplan.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlfahrplan.Location = new System.Drawing.Point(-2, 71);
             this.pnlfahrplan.Name = "pnlfahrplan";
