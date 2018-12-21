@@ -118,7 +118,7 @@
             this.grbSuche.Controls.Add(this.lsbZiel);
             this.grbSuche.Location = new System.Drawing.Point(27, 6);
             this.grbSuche.Name = "grbSuche";
-            this.grbSuche.Size = new System.Drawing.Size(796, 164);
+            this.grbSuche.Size = new System.Drawing.Size(796, 186);
             this.grbSuche.TabIndex = 10;
             this.grbSuche.TabStop = false;
             this.grbSuche.Text = "Suche";
@@ -134,7 +134,7 @@
             // 
             this.dtpUhrzeit.CustomFormat = "HH.mm";
             this.dtpUhrzeit.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpUhrzeit.Location = new System.Drawing.Point(89, 76);
+            this.dtpUhrzeit.Location = new System.Drawing.Point(93, 137);
             this.dtpUhrzeit.Name = "dtpUhrzeit";
             this.dtpUhrzeit.ShowUpDown = true;
             this.dtpUhrzeit.Size = new System.Drawing.Size(74, 24);
@@ -144,7 +144,7 @@
             // 
             this.dtpDatum.CustomFormat = "";
             this.dtpDatum.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpDatum.Location = new System.Drawing.Point(243, 76);
+            this.dtpDatum.Location = new System.Drawing.Point(243, 137);
             this.dtpDatum.Name = "dtpDatum";
             this.dtpDatum.Size = new System.Drawing.Size(113, 24);
             this.dtpDatum.TabIndex = 11;
@@ -178,18 +178,18 @@
             // 
             // btnSuchen
             // 
-            this.btnSuchen.Location = new System.Drawing.Point(622, 72);
+            this.btnSuchen.Location = new System.Drawing.Point(610, 135);
             this.btnSuchen.Name = "btnSuchen";
-            this.btnSuchen.Size = new System.Drawing.Size(135, 33);
+            this.btnSuchen.Size = new System.Drawing.Size(147, 33);
             this.btnSuchen.TabIndex = 3;
-            this.btnSuchen.Text = "Verbing suchen";
+            this.btnSuchen.Text = "Verbindung suchen";
             this.btnSuchen.UseVisualStyleBackColor = true;
             this.btnSuchen.Click += new System.EventHandler(this.btnSuchen_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(181, 79);
+            this.label4.Location = new System.Drawing.Point(173, 140);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(56, 18);
             this.label4.TabIndex = 8;
@@ -206,7 +206,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 79);
+            this.label3.Location = new System.Drawing.Point(24, 140);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 18);
             this.label3.TabIndex = 6;
@@ -270,9 +270,9 @@
             this.grbResultat.Controls.Add(this.lblLaden);
             this.grbResultat.Controls.Add(this.txtMail);
             this.grbResultat.Controls.Add(this.dgvResultat);
-            this.grbResultat.Location = new System.Drawing.Point(27, 176);
+            this.grbResultat.Location = new System.Drawing.Point(27, 198);
             this.grbResultat.Name = "grbResultat";
-            this.grbResultat.Size = new System.Drawing.Size(796, 287);
+            this.grbResultat.Size = new System.Drawing.Size(796, 278);
             this.grbResultat.TabIndex = 11;
             this.grbResultat.TabStop = false;
             this.grbResultat.Text = "Resultat";
@@ -310,9 +310,9 @@
             // 
             // pnlfahrplan
             // 
-            this.pnlfahrplan.Controls.Add(this.pnlAbfahrtsplan);
             this.pnlfahrplan.Controls.Add(this.grbResultat);
             this.pnlfahrplan.Controls.Add(this.grbSuche);
+            this.pnlfahrplan.Controls.Add(this.pnlAbfahrtsplan);
             this.pnlfahrplan.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlfahrplan.Location = new System.Drawing.Point(-2, 71);
             this.pnlfahrplan.Name = "pnlfahrplan";
@@ -326,7 +326,7 @@
             this.pnlAbfahrtsplan.Controls.Add(this.lblAbfahrtsplan);
             this.pnlAbfahrtsplan.Location = new System.Drawing.Point(3, 3);
             this.pnlAbfahrtsplan.Name = "pnlAbfahrtsplan";
-            this.pnlAbfahrtsplan.Size = new System.Drawing.Size(849, 473);
+            this.pnlAbfahrtsplan.Size = new System.Drawing.Size(849, 483);
             this.pnlAbfahrtsplan.TabIndex = 14;
             this.pnlAbfahrtsplan.Visible = false;
             // 
@@ -456,7 +456,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(850, 546);
+            this.ClientSize = new System.Drawing.Size(850, 560);
             this.Controls.Add(this.btnKarte);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnVerbindung);
@@ -464,7 +464,7 @@
             this.Controls.Add(this.pnlfahrplan);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(866, 585);
+            this.MaximumSize = new System.Drawing.Size(866, 599);
             this.Name = "Fahrplan";
             this.Text = "Fahrplan";
             this.grbSuche.ResumeLayout(false);
